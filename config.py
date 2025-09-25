@@ -7,7 +7,7 @@ MODEL_NAME = "gemini-1.5-flash-latest"
 
 # List of multiple API keys
 API_KEYS = [
-    "AIzaSyDkK_4aKI42cpwTGvllVN1JQ86yW2tObPI"
+    "AIzaSyCmA8WT94nKqe0Jv57OJy8xrePaHgShblQ"
     # add more keys here
 ]
 

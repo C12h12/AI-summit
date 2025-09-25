@@ -1,3 +1,9 @@
+import datetime
+import json
+import re
+from config import generator
+
+
 def generate_report(level, interview_type, evaluation_log):
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     weak_topics = []  # NEW: List of weak question topics
@@ -116,6 +122,7 @@ Suggested actions: {', '.join(rec_lines) if rec_lines else 'Maintain current per
 """
 
     final_report = "\n".join([candidate_details, interview_summary, hr_section, tech_section, overall_section, recommendations])
+    print(final_report)
 
     return {
         "candidate_details": candidate_details,

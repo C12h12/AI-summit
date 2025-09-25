@@ -4,7 +4,7 @@ import re
 import google.generativeai as genai
 
 # --- Gemini API Setup ---
-GEMINI_API_KEY = "AIzaSyA6lVTWPNq_Y3sKnnaJ7oZpcmvilAms_zs"
+GEMINI_API_KEY = "AIzaSyCmA8WT94nKqe0Jv57OJy8xrePaHgShblQ"
 genai.configure(api_key=GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
@@ -20,13 +20,22 @@ def generate_resources(major, weak_topics):
     try:
         resp = gemini_model.generate_content([{"role": "user", "parts": [recom_prompt]}])
         markdown = resp.text.strip()
+        print("Raw AI response:\n", markdown)  # Debug: see exact AI output
+
         for line in markdown.splitlines():
-            m = re.match(r"- \[(.+?)\]\((https?://[^\)]+)\):\s*(.+)", line)
+            # Flexible regex to handle: -, 1., 1) and separators : or - or – 
+            m = re.search(r"(?:[-\d\.\)]*\s*)\[(.+?)\]\((https?://[^\)]+)\)(?:\s*[:\-–]\s*)?(.*)", line)
             if m:
-                resources.append({"title": m.group(1), "url": m.group(2), "desc": m.group(3)})
+                resources.append({
+                    "title": m.group(1).strip(),
+                    "url": m.group(2).strip(),
+                    "desc": m.group(3).strip()
+                })
     except Exception as e:
         print("Resource generation error:", e)
+
     return resources
+
 
 # --- Main ---
 resume_path = "C:\\Users\\Chaitanya\\Desktop\\Resume\\Chaitanya_Thakre.pdf"

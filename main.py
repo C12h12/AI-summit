@@ -1,10 +1,16 @@
+import os
+
+os.environ["GRPC_VERBOSITY"] = "NONE"
+os.environ["GRPC_ABORT_ON_LEAKS"] = "0"
+
+
 from pdf_utils import extract_text_from_pdf
 from interview import run_interview
 import re
 import google.generativeai as genai
 
 # --- Gemini API Setup ---
-GEMINI_API_KEY = "AIzaSyA55uoaiy3m6myLQDuDH5uiMlqA9WlHEQs"
+GEMINI_API_KEY = "AIzaSyAj8-y3Y2nYjXOYIA703dyL9pMInA1h5Q4"
 genai.configure(api_key=GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
@@ -52,7 +58,7 @@ def extract_major_from_jd(jd_text):
 
 # --- Main ---
 resume_path = "C:\\Users\\Chaitanya\\Desktop\\Resume\\Chaitanya_Thakre.pdf"
-job_desc_path = "C:\\Users\\Chaitanya\\Desktop\\JD.txt"
+job_desc_path = "C:\\Users\\Chaitanya\\Desktop\\full_stack_developer_job_description.txt"
 
 resume_text = extract_text_from_pdf(resume_path)
 job_desc_text = extract_text_from_pdf(job_desc_path)

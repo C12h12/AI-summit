@@ -87,7 +87,6 @@ Candidate Resume:
    - Keep follow-up questions contextual (based on candidate’s last answer).
 
 3. Provide constructive feedback after each answer:
-   - Score (0–5).
    - Highlight positives (clarity, relevance, technical depth).
    - Suggest improvements (e.g., "Include metrics", "Use STAR format").
    -  Correct grammar, spelling mistakes, and vocabulary errors politely and briefly. 

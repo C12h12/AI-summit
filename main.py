@@ -30,11 +30,29 @@ def generate_resources(major, weak_topics):
 
     return resources
 
+def extract_major_from_jd(jd_text):
+    
+    # Convert to lowercase for easier matching
+    jd_text_lower = jd_text.lower()
 
+    # Common fields to look for
+    fields = [
+        "full stack", "front end", "back end", "software engineer",
+        "computer science", "information technology", "data science",
+        "ai", "machine learning", "web development", "devops"
+    ]
+
+    for field in fields:
+        if field in jd_text_lower:
+            # Return in title case for nicer formatting
+            return field.title()
+
+    # If no match, fallback
+    return "General"
 
 # --- Main ---
 resume_path = "C:\\Users\\Chaitanya\\Desktop\\Resume\\Chaitanya_Thakre.pdf"
-job_desc_path = "C:\\Users\\Chaitanya\\Desktop\\full_stack_developer_job_description.txt"
+job_desc_path = "C:\\Users\\Chaitanya\\Desktop\\JD.txt"
 
 resume_text = extract_text_from_pdf(resume_path)
 job_desc_text = extract_text_from_pdf(job_desc_path)
@@ -46,7 +64,7 @@ if input("Start the interview? (y/n): ").lower() in ["y", "yes", "ye"]:
     results = run_interview(level, type, job_desc_text, resume_text)
 
     weak_topics = results.get("weak_topics", [])
-    major = "Full Stack Development"  # can be extracted dynamically if needed
+    major = extract_major_from_jd(job_desc_text)
 
     resources = generate_resources(major, weak_topics)
 
@@ -56,8 +74,6 @@ if input("Start the interview? (y/n): ").lower() in ["y", "yes", "ye"]:
             print(url)  # plain URL, not clickable
     else:
         print("\nNo additional resources generated.")
-
-
 
 else:
     print("Interview canceled.")

@@ -4,7 +4,7 @@ import re
 import google.generativeai as genai
 
 # --- Gemini API Setup ---
-GEMINI_API_KEY = "AIzaSyCmA8WT94nKqe0Jv57OJy8xrePaHgShblQ"
+GEMINI_API_KEY = "AIzaSyA55uoaiy3m6myLQDuDH5uiMlqA9WlHEQs"
 genai.configure(api_key=GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
@@ -12,29 +12,24 @@ def generate_resources(major, weak_topics):
     topic_str = "; ".join(weak_topics) if weak_topics else major
     recom_prompt = (
         f"You are a helpful AI for interview preparation. The candidate needs to improve in these areas: {topic_str}.\n"
-        f"For the field of {major}, recommend 3 to 5 high-quality, up-to-date resources most relevant to these topics. "
-        f"Include direct clickable links (YouTube videos, websites, or documentation). List as markdown bullets with a 1-line description. "
-        f"Each bullet: [Title](url): description. Ensure all links work and are highly relevant to the candidate's weaknesses."
+        f"For the field of {major}, provide 3 to 5 high-quality, up-to-date resources most relevant to these topics.\n"
+        f"Return ONLY the URLs, one per line, with no titles, descriptions, or extra text."
     )
     resources = []
     try:
         resp = gemini_model.generate_content([{"role": "user", "parts": [recom_prompt]}])
-        markdown = resp.text.strip()
-        print("Raw AI response:\n", markdown)  # Debug: see exact AI output
+        text = resp.text.strip()
 
-        for line in markdown.splitlines():
-            # Flexible regex to handle: -, 1., 1) and separators : or - or – 
-            m = re.search(r"(?:[-\d\.\)]*\s*)\[(.+?)\]\((https?://[^\)]+)\)(?:\s*[:\-–]\s*)?(.*)", line)
-            if m:
-                resources.append({
-                    "title": m.group(1).strip(),
-                    "url": m.group(2).strip(),
-                    "desc": m.group(3).strip()
-                })
+        # Split into lines and keep only lines that look like URLs
+        for line in text.splitlines():
+            line = line.strip()
+            if line.startswith("http://") or line.startswith("https://"):
+                resources.append(line)
     except Exception as e:
         print("Resource generation error:", e)
 
     return resources
+
 
 
 # --- Main ---
@@ -56,11 +51,13 @@ if input("Start the interview? (y/n): ").lower() in ["y", "yes", "ye"]:
     resources = generate_resources(major, weak_topics)
 
     if resources:
-        print("\n📚 Recommended Resources to Improve:")
-        for res in resources:
-            print(f"- [{res['title']}]({res['url']}): {res['desc']}")
+        print("\n📚 Recommended URLs:")
+        for url in resources:
+            print(url)  # plain URL, not clickable
     else:
         print("\nNo additional resources generated.")
+
+
 
 else:
     print("Interview canceled.")
